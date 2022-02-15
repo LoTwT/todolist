@@ -37,7 +37,7 @@ export default defineConfig((config) => {
     },
 
     server: {
-      port: VITE_SERVER_PORT || 3000,
+      port: +VITE_SERVER_PORT || 3000,
       // 此处默认转换 /api, 未做通用处理...
       proxy: hasProxy && {
         [VITE_SERVER_PROXY]: {
@@ -54,7 +54,7 @@ export default defineConfig((config) => {
 // 如果需要在 src 内使用，请同时更新 src/env.d.ts
 // https://cn.vitejs.dev/guide/env-and-mode.html#intellisense
 interface ImportMetaEnv {
-  readonly VITE_SERVER_PORT: number
+  readonly VITE_SERVER_PORT: string
   readonly VITE_SERVER_PROXY: string
   readonly VITE_SERVER_PROXY_TARGET: string
 }
