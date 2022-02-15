@@ -1,4 +1,4 @@
-name: vue3-todolist
+name: todolist
 
 on:
   # 每当 push 到 main 分支时触发部署
@@ -26,22 +26,22 @@ jobs:
       # 缓存 node_modules
       - name: Cache dependencies
         uses: actions/cache@v2
-        id: pnpm-cache
+        id: yarn-cache
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-
+            ${{ runner.os }}-yarn-
 
       # 如果缓存没有命中，安装依赖
       - name: Install dependencies
-        if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm i --frozen-lockfile
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
 
       # 运行构建脚本
-      - name: Build Vue3 Todolist
-        run: pnpm build
+      - name: Build Todolist
+        run: yarn build
 
       # 查看 workflow 的文档来获取更多信息
       # @see https://github.com/crazy-max/ghaction-github-pages
@@ -52,5 +52,6 @@ jobs:
           target_branch: gh-pages
           # 部署目录为 VuePress 的默认输出目录
           build_dir: dist
+        env:
           # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
