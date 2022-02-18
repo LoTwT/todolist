@@ -24,12 +24,12 @@ export default defineConfig((config) => {
       vue(),
       ViteComponents({
         resolvers: [AntDesignVueResolver()],
-        dts: "./AutoImport.d.ts",
+        dts: "src/types/unplugin/ViteComponent.d.ts",
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       }),
       AutoImport({
         imports: ["vue", "vue-router", "pinia", "@vueuse/core"],
-        dts: "./AutoImport.d.ts",
+        dts: "src/types/unplugin/AutoImport.d.ts",
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       }),
     ],
