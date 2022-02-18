@@ -18,6 +18,8 @@ export default defineConfig((config) => {
   const hasProxy = !!(VITE_SERVER_PROXY && VITE_SERVER_PROXY_TARGET)
 
   return {
+    base: "/todolist/",
+
     plugins: [
       vue(),
       ViteComponents({
