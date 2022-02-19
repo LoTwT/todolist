@@ -1,10 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1>Todolist</h1>
-
   <current-time></current-time>
-
   <router-view></router-view>
 </template>
 

@@ -21,7 +21,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>{{ date }} - {{ time }}</div>
+  <n-space vertical align="center">
+    <n-gradient-text type="info" :size="64">
+      {{ date }} {{ time }}
+    </n-gradient-text>
+  </n-space>
 </template>
 
-<style scoped></style>
+<style scoped lang="less"></style>

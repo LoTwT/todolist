@@ -7,9 +7,11 @@ declare module 'vue' {
     CurrentTime: typeof import('./../../components/CurrentTime/index.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCheckbox: typeof import('naive-ui')['NCheckbox']
+    NGradientText: typeof import('naive-ui')['NGradientText']
     NInput: typeof import('naive-ui')['NInput']
     NList: typeof import('naive-ui')['NList']
     NListItem: typeof import('naive-ui')['NListItem']
+    NSpace: typeof import('naive-ui')['NSpace']
   }
 }
 
