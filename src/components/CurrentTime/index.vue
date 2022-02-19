@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import dayjs from "dayjs"
 
-const date = ref("")
-const time = ref("")
+const date = ref("YYYY-MM-DD")
+const time = ref("HH:mm:ss")
 
 const getCurrent = () => {
   const current = dayjs().format("YYYY-MM-DD HH:mm:ss")
