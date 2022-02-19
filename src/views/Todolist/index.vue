@@ -41,25 +41,23 @@ const clearTodo = () => (todolist.value = todolist.value.filter((t) => !t.done))
 
 <template>
   <div class="todolist">
-    <a-input v-model:value="inputValue" />
+    <n-input v-model:value="inputValue" />
 
-    <a-button type="primary" @click="addTodo">添加</a-button>
-    <a-button type="default" @click="clearTodo">清理</a-button>
+    <n-button type="primary" @click="addTodo">添加</n-button>
+    <n-button type="default" @click="clearTodo">清理</n-button>
 
     <div class="todolist-content" v-if="todolist.length">
-      <a-list :data-source="todolist">
-        <template #renderItem="{ item, index }">
-          <a-list-item>
-            <a-checkbox v-model:checked="item.done">
-              <span :class="{ done: item.done }">{{ item.title }}</span>
-            </a-checkbox>
+      <n-list>
+        <n-list-item v-for="(todo, index) in todolist">
+          <n-checkbox v-model:checked="todo.done">
+            <span :class="{ done: todo.done }">{{ todo.title }}</span>
+          </n-checkbox>
 
-            <span @click="() => removeTodo(index)">❌</span>
-          </a-list-item>
-        </template>
-      </a-list>
+          <span @click="() => removeTodo(index)">❌</span>
+        </n-list-item>
+      </n-list>
 
-      <a-checkbox v-model:checked="isAllDone">全选</a-checkbox>
+      <n-checkbox v-model:checked="isAllDone">全选</n-checkbox>
       <span>{{ doneCount }} / {{ totalCount }}</span>
     </div>
 
