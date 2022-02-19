@@ -9,6 +9,7 @@ declare module 'vue' {
     AInput: typeof import('ant-design-vue/es')['Input']
     AList: typeof import('ant-design-vue/es')['List']
     AListItem: typeof import('ant-design-vue/es')['ListItem']
+    CurrentTime: typeof import('./../../components/CurrentTime/index.vue')['default']
   }
 }
 
