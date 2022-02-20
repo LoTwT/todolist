@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useTodolistStore } from "@/store/todolist"
-import { removeLocalStorage, setLocalStorage } from "@/utils"
+import { getRandomId, removeLocalStorage, setLocalStorage } from "@/utils"
+import { NButton, NInput, NSpace, type DataTableColumns } from "naive-ui"
+import type { ITodoItem } from "."
 
 const todolistStore = useTodolistStore()
 const { todolist } = storeToRefs(todolistStore)
@@ -17,55 +19,140 @@ todolistStore.$subscribe((mutation, state) => {
 
 const inputValue = ref("")
 
-const addTodo = () => {
-  if (inputValue.value === "") return
-
-  todolist.value.push({ title: inputValue.value, done: false })
-  inputValue.value = ""
-}
-
 const doneCount = computed(() => todolist.value.filter((t) => t.done).length)
 const totalCount = computed(() => todolist.value.length)
-const isAllDone = computed({
-  get() {
-    return doneCount.value === totalCount.value
-  },
-  set(value: boolean) {
-    todolist.value.forEach((t) => (t.done = value))
-  },
-})
 
+const addTodo = () => {
+  todolist.value.push({
+    id: getRandomId(),
+    title: inputValue.value,
+    done: false,
+  })
+  inputValue.value = ""
+}
 const removeTodo = (index: number) => todolist.value.splice(index, 1)
 const clearTodo = () => (todolist.value = todolist.value.filter((t) => !t.done))
+
+const moveTodo = (index: number, isUp: boolean) => {
+  const otherIndex = isUp ? index - 1 : index + 1
+
+  if (otherIndex < 0 || otherIndex > todolist.value.length - 1) return
+  ;[todolist.value[index], todolist.value[otherIndex]] = [
+    todolist.value[otherIndex],
+    todolist.value[index],
+  ]
+}
+
+const onUpdateSelections = (rowKeys: (string | number)[]) => {
+  todolist.value.forEach((todo) => (todo.done = false))
+
+  rowKeys.forEach((id) => {
+    const todo = todolist.value.find((todo) => todo.id === id)
+    todo && (todo.done = true)
+  })
+}
+
+const dataColumns: DataTableColumns<ITodoItem> = [
+  {
+    type: "selection",
+  },
+  {
+    title: "No.",
+    key: "no",
+    width: "80",
+    render: (rowData, rowIndex) => rowIndex + 1,
+  },
+  {
+    title: "Title",
+    key: "title",
+    render: (rowData, rowIndex) =>
+      h(NInput, {
+        value: rowData.title,
+        onUpdateValue(v) {
+          todolist.value[rowIndex].title = v
+        },
+      }),
+  },
+  {
+    title: "Action",
+    key: "action",
+    width: "120",
+    render: (rowData, rowIndex) =>
+      h(NSpace, () => [
+        h(
+          NButton,
+          {
+            type: "default",
+            circle: true,
+            size: "tiny",
+            disabled: rowIndex === 0,
+            onClick: () => moveTodo(rowIndex, true),
+          },
+          { default: () => "↑" },
+        ),
+        h(
+          NButton,
+          {
+            type: "default",
+            circle: true,
+            size: "tiny",
+            disabled: rowIndex === todolist.value.length - 1,
+            onClick: () => moveTodo(rowIndex, false),
+          },
+          { default: () => "↓" },
+        ),
+
+        h(
+          NButton,
+          {
+            type: "default",
+            circle: true,
+            size: "tiny",
+            onClick: () => removeTodo(rowIndex),
+          },
+          { default: () => "✖" },
+        ),
+      ]),
+  },
+]
 </script>
 
 <template>
-  <div class="todolist">
-    <n-input v-model:value="inputValue" />
+  <n-space justify="center" align="center" vertical>
+    <n-card hoverable size="large" class="card">
+      <template #default>
+        <n-data-table
+          :columns="dataColumns"
+          :data="todolist"
+          :bordered="false"
+          :max-height="430"
+          :row-key="(rowData) => rowData.id"
+          @update:checked-row-keys="onUpdateSelections"
+        />
+      </template>
 
-    <n-button type="primary" @click="addTodo">添加</n-button>
-    <n-button type="default" @click="clearTodo">清理</n-button>
+      <template #action>
+        <n-space justify="end">
+          <n-button type="default" circle @click="clearTodo">➖</n-button>
+          <n-button type="default" circle @click="addTodo">➕</n-button>
+        </n-space>
+      </template>
+    </n-card>
 
-    <div class="todolist-content" v-if="todolist.length">
-      <n-list>
-        <n-list-item v-for="(todo, index) in todolist">
-          <n-checkbox v-model:checked="todo.done">
-            <span :class="{ done: todo.done }">{{ todo.title }}</span>
-          </n-checkbox>
-
-          <span @click="() => removeTodo(index)">❌</span>
-        </n-list-item>
-      </n-list>
-
-      <n-checkbox v-model:checked="isAllDone">全选</n-checkbox>
-      <span>{{ doneCount }} / {{ totalCount }}</span>
-    </div>
-
-    <div v-else>暂无数据</div>
-  </div>
+    <span>{{ doneCount }} / {{ totalCount }}</span>
+  </n-space>
 </template>
 
 <style scoped lang="less">
+.card {
+  width: 60vw;
+  height: 60vh;
+}
+
+:deep(.n-card__content) {
+  padding: 0 !important;
+}
+
 .done {
   text-decoration: line-through;
   color: gray;

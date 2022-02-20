@@ -19,7 +19,7 @@ const themeStore = useThemeStore()
   </n-config-provider>
 </template>
 
-<style scoped lang="less">
+<style>
 * {
   padding: 0;
   margin: 0;
