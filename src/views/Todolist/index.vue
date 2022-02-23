@@ -43,6 +43,9 @@ const moveTodo = (index: number, isUp: boolean) => {
   ]
 }
 
+const checkedRowKeys = computed(() =>
+  todolist.value.filter((t) => t.done).map((t) => t.id),
+)
 const onUpdateSelections = (rowKeys: (string | number)[]) => {
   todolist.value.forEach((todo) => (todo.done = false))
 
@@ -127,6 +130,7 @@ const dataColumns: DataTableColumns<ITodoItem> = [
           :bordered="false"
           :max-height="430"
           :row-key="(rowData) => rowData.id"
+          :checked-row-keys="checkedRowKeys"
           @update:checked-row-keys="onUpdateSelections"
         />
       </template>
