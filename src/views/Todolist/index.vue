@@ -69,12 +69,14 @@ const dataColumns: DataTableColumns<ITodoItem> = [
     title: "Title",
     key: "title",
     render: (rowData, rowIndex) =>
-      h(NInput, {
-        value: rowData.title,
-        onUpdateValue(v) {
-          todolist.value[rowIndex].title = v
-        },
-      }),
+      rowData.done
+        ? rowData.title
+        : h(NInput, {
+            value: rowData.title,
+            onUpdateValue(v) {
+              todolist.value[rowIndex].title = v
+            },
+          }),
   },
   {
     title: "Action",
